@@ -1,4 +1,4 @@
-# AI Development Architecture - version 0.92
+# AI Development Architecture - version 0.93
 
 This document outlines the architecture of our AI development environment, which consists of three main layers: Client Layer, Routing Layer, and Provider Layer.
 
@@ -135,7 +135,8 @@ class Client_Layer,Routing_Layer,Provider_Layer layerStyle
 
 %% Spacing between layers
 Client_Layer ~~~ Routing_Layer
-Routing_Layer ~~~ Provider_Layer```
+Routing_Layer ~~~ Provider_Layer
+```
 
 
 
