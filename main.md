@@ -44,7 +44,12 @@ The client layer consists of several key components:
 3. Provider layer offers both commercial and self-hosted options
 
 ## Architecture Diagram
+<!-- Local Development Version -->
 @import "chart.md" {code_block=true class="mermaid"}
+
+<!-- GitHub Version -->
+```mermaid
+@import "chart.md"
 
 ## Key Benefits
 1. **Flexibility**: Multiple AI providers and tools
