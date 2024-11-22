@@ -5,9 +5,8 @@ on:
       - 'main.md'
       - 'chart.md'
 
-# Add these permissions
 permissions:
-  contents: write  # This allows the action to push changes
+  contents: write
 
 jobs:
   build:
@@ -26,7 +25,14 @@ jobs:
           # Read ARCHITECTURE.md line by line
           while IFS= read -r line; do
             if [[ "$line" == *"@import \"chart.md\""* ]]; then
+              # Skip the @import line and ensure proper Mermaid formatting
+              continue
+            elif [[ "$line" == *"```mermaid"* ]]; then
+              # Add the Mermaid opening fence
+              echo "```mermaid" >> temp.md
+              # Add the chart content
               cat chart.md >> temp.md
+              # Add the closing fence later
             else
               echo "$line" >> temp.md
             fi
