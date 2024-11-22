@@ -4,6 +4,11 @@ on:
     paths:
       - 'main.md'
       - 'chart.md'
+
+# Add these permissions
+permissions:
+  contents: write  # This allows the action to push changes
+
 jobs:
   build:
     runs-on: ubuntu-latest
