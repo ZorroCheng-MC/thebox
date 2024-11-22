@@ -16,25 +16,20 @@ jobs:
       - name: Generate ARCHITECTURE.md
         shell: bash
         run: |
-          # Start with a fresh ARCHITECTURE.md
-          echo "" > ARCHITECTURE.md
+          # Create new ARCHITECTURE.md
+          rm -f ARCHITECTURE.md
+          touch ARCHITECTURE.md
           
-          # Flag to track if we're inside the mermaid block
-          in_mermaid=false
-          
-          # Process main.md line by line
-          while IFS= read -r line; do
-            if [[ "$line" == *"```mermaid"* ]]; then
-              # Start of mermaid block
+          # Read main.md line by line and process
+          while IFS= read -r line
+          do
+            if [[ $line == *"@import \"chart.md\""* ]]; then
+              continue
+            elif [[ $line == *"```mermaid"* ]]; then
               echo "```mermaid" >> ARCHITECTURE.md
               cat chart.md >> ARCHITECTURE.md
-              in_mermaid=true
-            elif [[ "$line" == *"```"* ]] && [ "$in_mermaid" = true ]; then
-              # End of mermaid block
               echo "```" >> ARCHITECTURE.md
-              in_mermaid=false
-            elif [[ "$line" != *"@import"* ]] && [ "$in_mermaid" = false ]; then
-              # Copy non-import lines outside mermaid blocks
+            else
               echo "$line" >> ARCHITECTURE.md
             fi
           done < main.md
