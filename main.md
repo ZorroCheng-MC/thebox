@@ -1,4 +1,4 @@
-# AI Development Architecture - version 0.4
+# AI Development Architecture - version 0.5
 
 This document outlines the architecture of our AI development environment, which consists of three main layers: Client Layer, Routing Layer, and Provider Layer.
 
@@ -47,9 +47,6 @@ The client layer consists of several key components:
 <!-- Local Development Version -->
 @import "chart.md" {code_block=true class="mermaid"}
 
-<!-- GitHub Version -->
-```mermaid
-@import "chart.md"
 
 ## Key Benefits
 1. **Flexibility**: Multiple AI providers and tools
