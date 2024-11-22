@@ -16,30 +16,28 @@ jobs:
       - name: Generate ARCHITECTURE.md
         shell: bash
         run: |
-          # First, copy main.md to ARCHITECTURE.md
-          cp main.md ARCHITECTURE.md
+          # Start with a fresh ARCHITECTURE.md
+          echo "" > ARCHITECTURE.md
           
-          # Create a temporary file
-          touch temp.md
+          # Flag to track if we're inside the mermaid block
+          in_mermaid=false
           
-          # Read ARCHITECTURE.md line by line
+          # Process main.md line by line
           while IFS= read -r line; do
-            if [[ "$line" == *"@import \"chart.md\""* ]]; then
-              # Skip the @import line and ensure proper Mermaid formatting
-              continue
-            elif [[ "$line" == *"```mermaid"* ]]; then
-              # Add the Mermaid opening fence
-              echo "```mermaid" >> temp.md
-              # Add the chart content
-              cat chart.md >> temp.md
-              # Add the closing fence later
-            else
-              echo "$line" >> temp.md
+            if [[ "$line" == *"```mermaid"* ]]; then
+              # Start of mermaid block
+              echo "```mermaid" >> ARCHITECTURE.md
+              cat chart.md >> ARCHITECTURE.md
+              in_mermaid=true
+            elif [[ "$line" == *"```"* ]] && [ "$in_mermaid" = true ]; then
+              # End of mermaid block
+              echo "```" >> ARCHITECTURE.md
+              in_mermaid=false
+            elif [[ "$line" != *"@import"* ]] && [ "$in_mermaid" = false ]; then
+              # Copy non-import lines outside mermaid blocks
+              echo "$line" >> ARCHITECTURE.md
             fi
-          done < ARCHITECTURE.md
-          
-          # Replace ARCHITECTURE.md with the processed content
-          mv temp.md ARCHITECTURE.md
+          done < main.md
       - name: Commit changes
         run: |
           git config --local user.email "zorro.cheng@hkmci.com"
