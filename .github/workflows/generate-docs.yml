@@ -8,18 +8,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4  # Updated from v2 to v4
+      - uses: actions/checkout@v4
       - name: Generate ARCHITECTURE.md
         run: |
           # Copy main.md to ARCHITECTURE.md
           cp main.md ARCHITECTURE.md
-          # Replace @import with chart content
-          sed -i "/```mermaid/r chart.md" ARCHITECTURE.md
-          sed -i "/@import.*chart.md.*/d" ARCHITECTURE.md
+          # Find the line number of the Mermaid block
+          MERMAID_LINE=$(grep -n "^\`\`\`mermaid" ARCHITECTURE.md | cut -d: -f1)
+          if [ ! -z "$MERMAID_LINE" ]; then
+            # Insert chart content after the Mermaid opening
+            sed -i "${MERMAID_LINE}r chart.md" ARCHITECTURE.md
+            # Remove the @import line
+            sed -i "/@import.*chart.md.*/d" ARCHITECTURE.md
+          fi
       - name: Commit changes
         run: |
           git config --local user.email "zorro.cheng@hkmci.com"
           git config --local user.name "ZorroCheng-MC"
           git add ARCHITECTURE.md
           git commit -m "Update ARCHITECTURE.md" || echo "No changes to commit"
-          git push
+          git push origin HEAD:${{ github.ref }}
