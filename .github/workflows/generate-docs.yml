@@ -27,6 +27,8 @@ jobs:
               # When we find the import line, output the mermaid fence and chart content
               echo '```mermaid' >> ARCHITECTURE.md
               cat chart.md >> ARCHITECTURE.md
+              # Add newline before closing fence
+              echo "" >> ARCHITECTURE.md
               echo '```' >> ARCHITECTURE.md
               # Add newline after mermaid block
               echo "" >> ARCHITECTURE.md
