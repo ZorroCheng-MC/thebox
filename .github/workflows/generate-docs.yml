@@ -16,12 +16,21 @@ jobs:
       - name: Generate ARCHITECTURE.md
         run: |
           #!/bin/bash
-          # Read content from main.md
-          content=$(cat main.md)
-          # Read content from chart.md
-          chart_content=$(cat chart.md)
-          # Replace the import line with chart content
-          echo "$content" | sed "/@import \"chart.md\"/c\\$chart_content" > ARCHITECTURE.md
+          # Initialize ARCHITECTURE.md
+          : > ARCHITECTURE.md
+          
+          # Process main.md line by line
+          while read -r line; do
+            if [[ "$line" == *"@import \"chart.md\""* ]]; then
+              # When we find the import line, output the mermaid fence and chart content
+              echo '```mermaid' >> ARCHITECTURE.md
+              cat chart.md >> ARCHITECTURE.md
+              echo '```' >> ARCHITECTURE.md
+            else
+              # Output all other lines as-is
+              echo "$line" >> ARCHITECTURE.md
+            fi
+          done < main.md
       - name: Commit changes
         run: |
           git config --local user.email "zorro.cheng@hkmci.com"
