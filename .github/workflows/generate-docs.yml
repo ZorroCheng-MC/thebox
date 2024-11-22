@@ -14,25 +14,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Generate ARCHITECTURE.md
-        shell: bash
         run: |
-          # Create new ARCHITECTURE.md
-          rm -f ARCHITECTURE.md
-          touch ARCHITECTURE.md
-          
-          # Read main.md line by line and process
-          while IFS= read -r line
-          do
-            if [[ $line == *"@import \"chart.md\""* ]]; then
-              continue
-            elif [[ $line == *"```mermaid"* ]]; then
-              echo "```mermaid" >> ARCHITECTURE.md
-              cat chart.md >> ARCHITECTURE.md
-              echo "```" >> ARCHITECTURE.md
-            else
-              echo "$line" >> ARCHITECTURE.md
-            fi
-          done < main.md
+          #!/bin/bash
+          # Read content from main.md
+          content=$(cat main.md)
+          # Read content from chart.md
+          chart_content=$(cat chart.md)
+          # Replace the import line with chart content
+          echo "$content" | sed "/@import \"chart.md\"/c\\$chart_content" > ARCHITECTURE.md
       - name: Commit changes
         run: |
           git config --local user.email "zorro.cheng@hkmci.com"
