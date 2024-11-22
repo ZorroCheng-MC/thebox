@@ -1,0 +1,25 @@
+name: Generate Documentation
+on:
+  push:
+    paths:
+      - 'main.md'
+      - 'chart.md'
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Generate ARCHITECTURE.md
+        run: |
+          # Copy main.md to ARCHITECTURE.md
+          cp main.md ARCHITECTURE.md
+          # Replace @import with chart content
+          sed -i "/```mermaid/r chart.md" ARCHITECTURE.md
+          sed -i "/@import.*chart.md.*/d" ARCHITECTURE.md
+      - name: Commit changes
+        run: |
+          git config --local user.email "zorro.cheng@hkmci.com"
+          git config --local user.name "ZorroCheng-MC"
+          git add ARCHITECTURE.md
+          git commit -m "Update ARCHITECTURE.md" || echo "No changes to commit"
+          git push
