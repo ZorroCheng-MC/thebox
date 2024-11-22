@@ -1,11 +1,11 @@
-# AI Development Architecture - version 0.94
+# AI Development Architecture - version 0.95
 
 This document outlines the architecture of our AI development environment, which consists of four main layers: User Layer, Interface Layer, Routing Layer, and Provider Layer.
 
 ## Architecture Overview
 
 ### User Layer
-The user layer is the interface which end-user interfacing with the system. This includes tools such as thebox.hkmci.net, VSCode, Obsidian and other n8n workflows.
+The user layer is the interface which end-user interfacing with the system. This includes tools such as thebox.hkmci.net, VSCode, Obsidian, n8n workflows, and Audiobot UI.
 
 #### Development Tools
 - **VSCode**: Primary code editor for development
@@ -13,12 +13,13 @@ The user layer is the interface which end-user interfacing with the system. This
 
 #### Web Chat UI
 - **Chat UI**: User interface for chat interactions
+- **Audiobot UI**: User interface for audio interactions
 
 #### Workflow Management Tools
 - **n8n Automation**: Workflow automation platform
 
 ### Interface Layer
-The interface layers are the extenstion, plugins and ai api call interface of the users tool to talk with the api of different AI servcices.
+The interface layers are the extensions, plugins, and AI API call interfaces of the users' tools to communicate with different AI services.
 
 #### Extensions
 - **Cline & Aider**: VSCode extension for AI assistance
@@ -30,22 +31,24 @@ The interface layers are the extenstion, plugins and ai api call interface of th
 
 #### Connections
 - **Cloudflare Tunnel**: Secure connection for web interfaces
+- **Zoombot**: Interface for Zoom interactions
 
 ### Routing Layer
-The routing layer handles the api call from the interface layer to the different AI service providers. As a result, we can make sure all tools can talk to different provider by the api call translation from the api call routers. It also reduce the burden of decentrailized api keys management.
+The routing layer handles the API calls from the interface layer to the different AI service providers. It ensures all tools can communicate with different providers by translating API calls and managing decentralized API keys.
 
-- **LLM Router**: Central routing system (litellm) managing model traffic and distribution. At this point, LiteLLM only handle Azure Github model translation so that we can enjoy the free openai api calls through this routing services.
-- **OpenWebUI**: Other than the Web Chat interface. OpenWebUI support individual API key management for end users. So that the end-users can call all the available ai api of the company from this united api service. Please note that it's not a openai compatible api.
+- **LLM Router**: Central routing system (litellm) managing model traffic and distribution. Currently handles Azure GitHub model translation for free OpenAI API calls.
+- **OpenWebUI**: Supports individual API key management for end-users, allowing access to all company AI APIs.
 
 ### Provider Layer
-- **OpenAI**: OpenAI, provide gpt4o and other gpt models.
-- **Anthropic Claude**: Claude, provide Sonet and Haiku models.
-- **GitHub Models**: Azure Service from Github. Provide Free openai gpt4o services.
-- **Ollama Local Models**: Self-hosted model deployment. Provide Llama 3.1, 3.2, Qwen, Qwen-coder, Mistral etc...
+- **OpenAI**: Provides GPT models
+- **Anthropic Claude**: Provides Sonet and Haiku models
+- **GitHub Models**: Azure service providing free OpenAI GPT4o services
+- **Ollama Local Models**: Self-hosted models like Llama, Qwen, and Mistral
+- **Whisper AI**: Provides audio processing capabilities
 
 ## Connection Flow
 1. User tools connect through the interface layer to the routing layer
-2. The routing layer provides api service to the providers available
+2. The routing layer provides API services to the available providers
 3. Provider layer offers both commercial and self-hosted options
 
 ## Architecture Diagram
@@ -58,6 +61,7 @@ graph TD
 subgraph User_Layer["User Layer"]
 direction LR
 chat_ui["Chat UI"]
+audiobot_ui["Audiobot UI"]
 vscode["VSCode (Code/Doc Editor)"]
 obsidian["Obsidian (Doc Editor)"]
 n8n["n8n Automation"]
@@ -70,6 +74,7 @@ companion["Companion"]
 cloudflare_tunnel["Cloudflare Tunnel"]
 embedding["Embedding Node"]
 chatmodel["Chat Model Node"]
+zoombot["Zoombot"]
 end
 
 chat_ui --> cloudflare_tunnel
@@ -81,6 +86,8 @@ obsidian -->|Extension| companion
 n8n -->|Node| embedding
 n8n -->|Node| chatmodel
 cline --> owui
+audiobot_ui --> whisper
+zoombot --> whisper
 
 subgraph Routing_Layer["Routing Layer"]
 direction LR
@@ -96,11 +103,13 @@ openai["OpenAI API"]
 claude["Anthropic Claude"]
 github["GitHub Models"]
 ollama["Ollama Local Models"]
+whisper["Whisper AI"]
 %% Style provider boxes
 style ollama fill:#e1f5fe,stroke:#01579b
 style github fill:#e8f5e9,stroke:#1b5e20
 style openai fill:#fff3e0,stroke:#e65100
 style claude fill:#f3e5f5,stroke:#4a148c
+style whisper fill:#f5f5dc,stroke:#8b4513
 end
 
 %% Connections between layers with clear routing
