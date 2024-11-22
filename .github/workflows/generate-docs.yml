@@ -10,17 +10,21 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Generate ARCHITECTURE.md
+        shell: bash
         run: |
-          # Copy main.md to ARCHITECTURE.md
-          cp main.md ARCHITECTURE.md
-          # Find the line number of the Mermaid block
-          MERMAID_LINE=$(grep -n "^\`\`\`mermaid" ARCHITECTURE.md | cut -d: -f1)
-          if [ ! -z "$MERMAID_LINE" ]; then
-            # Insert chart content after the Mermaid opening
-            sed -i "${MERMAID_LINE}r chart.md" ARCHITECTURE.md
-            # Remove the @import line
-            sed -i "/@import.*chart.md.*/d" ARCHITECTURE.md
-          fi
+          # Create ARCHITECTURE.md
+          {
+            # Read main.md line by line
+            while IFS= read -r line; do
+              if [[ "$line" == *"@import \"chart.md\""* ]]; then
+                # When we find the import line, insert chart contents
+                cat chart.md
+              else
+                # Otherwise output the line as-is
+                echo "$line"
+              fi
+            done < main.md
+          } > ARCHITECTURE.md
       - name: Commit changes
         run: |
           git config --local user.email "zorro.cheng@hkmci.com"
