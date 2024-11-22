@@ -1,4 +1,4 @@
-# AI Development Architecture - version 0.5
+# AI Development Architecture - version 0.91
 
 This document outlines the architecture of our AI development environment, which consists of three main layers: Client Layer, Routing Layer, and Provider Layer.
 
@@ -45,6 +45,7 @@ The client layer consists of several key components:
 
 ## Architecture Diagram
 <!-- Local Development Version -->
+```mermaid
 graph TD
 %% Define subgraphs with clear spacing and alignment
 subgraph Client_Layer["Client Layer"]
@@ -133,7 +134,8 @@ class Client_Layer,Routing_Layer,Provider_Layer layerStyle
 
 %% Spacing between layers
 Client_Layer ~~~ Routing_Layer
-Routing_Layer ~~~ Provider_Layer
+Routing_Layer ~~~ Provider_Layer```
+
 
 ## Key Benefits
 1. **Flexibility**: Multiple AI providers and tools
