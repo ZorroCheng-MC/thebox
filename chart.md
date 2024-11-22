@@ -4,6 +4,7 @@ graph TD
 subgraph User_Layer["User Layer"]
 direction LR
 chat_ui["Chat UI"]
+audiobot_ui["Audiobot UI"]
 vscode["VSCode (Code/Doc Editor)"]
 obsidian["Obsidian (Doc Editor)"]
 n8n["n8n Automation"]
@@ -16,6 +17,7 @@ companion["Companion"]
 cloudflare_tunnel["Cloudflare Tunnel"]
 embedding["Embedding Node"]
 chatmodel["Chat Model Node"]
+zoombot["Zoombot"]
 end
 
 chat_ui --> cloudflare_tunnel
@@ -27,6 +29,8 @@ obsidian -->|Extension| companion
 n8n -->|Node| embedding
 n8n -->|Node| chatmodel
 cline --> owui
+audiobot_ui --> whisper
+zoombot --> whisper
 
 subgraph Routing_Layer["Routing Layer"]
 direction LR
@@ -42,11 +46,13 @@ openai["OpenAI API"]
 claude["Anthropic Claude"]
 github["GitHub Models"]
 ollama["Ollama Local Models"]
+whisper["Whisper AI"]
 %% Style provider boxes
 style ollama fill:#e1f5fe,stroke:#01579b
 style github fill:#e8f5e9,stroke:#1b5e20
 style openai fill:#fff3e0,stroke:#e65100
 style claude fill:#f3e5f5,stroke:#4a148c
+style whisper fill:#f5f5dc,stroke:#8b4513
 end
 
 %% Connections between layers with clear routing
