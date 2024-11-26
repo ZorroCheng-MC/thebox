@@ -64,7 +64,7 @@ chat_ui["Chat UI"]
 audiobot_ui["Audiobot UI"]
 vscode["VSCode (Code/Doc Editor)"]
 obsidian["Obsidian (Doc Editor)"]
-n8n["n8n Automation"]
+auditobot["Auditobot"]
 end
 
 subgraph Interface_Layer["Interface Layer"]
@@ -72,9 +72,8 @@ direction LR
 cline["Cline & Aider"]
 companion["Companion"]
 cloudflare_tunnel["Cloudflare Tunnel"]
-embedding["Embedding Node"]
-chatmodel["Chat Model Node"]
 zoombot["Zoombot"]
+n8n["n8n Automation"]
 end
 
 chat_ui --> cloudflare_tunnel
@@ -83,8 +82,8 @@ cloudflare_tunnel --> owui
 %% Connect components
 vscode -->|Extension| cline
 obsidian -->|Extension| companion
-n8n -->|Node| embedding
-n8n -->|Node| chatmodel
+auditobot --> n8n
+n8n --> litellm
 cline --> owui
 audiobot_ui --> whisper
 zoombot --> whisper
@@ -114,8 +113,6 @@ end
 
 %% Connections between layers with clear routing
 %% Client to Routing
-embedding --> litellm
-chatmodel --> litellm
 cline --> litellm
 
 %% Direct connections to providers
